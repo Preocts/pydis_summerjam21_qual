@@ -22,11 +22,22 @@ class Eggular:
         self.labels = labels
         self.centered = centered
 
+        # We can always assume all rows will have the same # of entries
+        self.total_columns = len(rows[0])
+        self.col_sizes: List[int] = [0 for _ in range(self.total_columns)]
+
         self.table_string = ""
 
     def __str__(self) -> str:
         """Print the rendered table"""
         return self.table_string
+
+    def find_column_sizes(self) -> None:
+        """Finds the max column width"""
+        for row in self.rows:
+            for idx, column_value in enumerate(row):
+                if len(column_value) > self.col_sizes[idx]:
+                    self.col_sizes[idx] = len(column_value)
 
 
 def make_table(
@@ -42,6 +53,9 @@ def make_table(
     :return: A table representing the rows passed in.
     """
     egg_table = Eggular(rows, labels, centered)
+
+    egg_table.find_column_sizes()
+    print(egg_table.col_sizes)
 
     return egg_table.table_string
 
