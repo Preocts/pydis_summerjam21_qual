@@ -56,9 +56,13 @@ class Eggular:
     def _table_border(self, left: str, mid: str, seg: str, right: str) -> str:
         """Generates border row of table"""
         table_top = f"{left}{mid}"
-        for size in self.col_sizes:
-            table_top += mid * size
-        return f"{table_top}{mid}{right}"
+
+        for idx, size in enumerate(self.col_sizes):
+            if idx == 0:
+                table_top = f"{left}{mid * (size + 2)}"
+            else:
+                table_top += f"{seg}{mid * (size + 2)}"
+        return f"{table_top}{right}"
 
     def _table_rows(self, rows: List[List[str]]) -> List[str]:
         """Generates rows of table values"""
