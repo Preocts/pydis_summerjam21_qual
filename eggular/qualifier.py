@@ -29,12 +29,13 @@ class Eggular:
         """Runs all steps to make a table"""
         self._find_column_sizes()
 
-        table_rows = self._table_border(*self.TOP_BORDER) + "\n"
+        table_rows = self._table_border(*self.TOP_BORDER)
 
         if self.labels:
-            table_rows = "\n".join(self._table_rows([self.labels]))
+            table_rows += "\n" + "\n".join(self._table_rows([self.labels]))
+            table_rows += "\n" + self._table_border(*self.MID_BORDER)
 
-        table_rows += "\n".join(self._table_rows(self.rows))
+        table_rows += "\n" + "\n".join(self._table_rows(self.rows))
 
         table_rows += "\n" + self._table_border(*self.BOT_BORDER)
 
@@ -66,7 +67,11 @@ class Eggular:
             table_row = ""
             for idx, column_value in enumerate(row):
                 padded_value = self._pad_value(column_value, idx)
-                table_row += f"{self.VERT} {padded_value}"
+                if idx == 0:
+                    table_row += f"{self.VERT} {padded_value}"
+                else:
+                    table_row += f" {self.VERT} {padded_value}"
+
             table_row += f" {self.VERT}"
             table_values.append(table_row)
         return table_values
@@ -96,6 +101,10 @@ def make_table(
 
 if __name__ == "__main__":
     from tests.qualifier_test import SAMPLE01_ROWS
+    from tests.qualifier_test import SAMPLE02_ROWS
+    from tests.qualifier_test import SAMPLE02_LABELS
 
     print(make_table(SAMPLE01_ROWS))
+    print("\n\n")
+    print(make_table(SAMPLE02_ROWS, SAMPLE02_LABELS))
     sys.exit(0)
