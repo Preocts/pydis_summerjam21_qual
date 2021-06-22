@@ -25,21 +25,25 @@ $ cd pydis_summerjam21_qual
 
 Create and activate `venv`:
 ```bash
-$ python3 -m venv venv
+$ python3.9 -m venv venv
 $ . venv/bin/activate
 ```
 
 Your command prompt should now have a `(venv)` prefix on it.
 
-Install editable library and development requirements:
+Install development requirements:
 ```bash
 (venv) $ pip install -r requirements-dev.txt
-(venv) $ pip install --editable .
 ```
 
 Install pre-commit hooks to local repo:
 ```bash
 (venv) $ pre-commit install
+```
+
+Run tests, generate coverage report:
+```bash
+(venv) $ tox
 ```
 
 To exit the `venv`:
