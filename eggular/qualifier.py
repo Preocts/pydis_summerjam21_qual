@@ -3,13 +3,22 @@ from typing import Any
 from typing import List
 from typing import Optional
 
-SAMPLE01 = rows = [
+SAMPLE01_ROWS: List[List[Any]] = [
     ["Lemon"],
     ["Sebastiaan"],
     ["KutieKatj9"],
     ["Jake"],
     ["Not Joe"],
 ]
+SAMPLE02_ROWS: List[List[Any]] = [
+    ["Lemon", 18_3285, "Owner"],
+    ["Sebastiaan", 18_3285.1, "Owner"],
+    ["KutieKatj", 15_000, "Admin"],
+    ["Jake", "MoreThanU", "Helper"],
+    ["Joe", -12, "Idk Tbh"],
+]
+
+SAMPLE02_LABELS = ["User", "Messages", "Role"]
 
 
 class Eggular:
@@ -25,8 +34,8 @@ class Eggular:
     def __init__(
         self, rows: List[List[Any]], labels: Optional[List[Any]], centered: bool
     ) -> None:
-        self.rows = rows
-        self.labels = labels
+        self.rows = [self._stringify(row) for row in rows]
+        self.labels = [str(label) for label in labels] if labels is not None else []
         self.centered = centered
 
         # We can always assume all rows will have the same # of entries
@@ -48,6 +57,11 @@ class Eggular:
         ]
 
         return "\n".join(table_rows)
+
+    @staticmethod
+    def _stringify(list_data: List[Any]) -> List[str]:
+        """Return given list with strings instead"""
+        return [str(data) for data in list_data]
 
     def _find_column_sizes(self) -> None:
         """Finds the max column width"""
@@ -106,5 +120,5 @@ def make_table(
 
 
 if __name__ == "__main__":
-    print(make_table(SAMPLE01))
+    print(make_table(SAMPLE01_ROWS))
     sys.exit(0)

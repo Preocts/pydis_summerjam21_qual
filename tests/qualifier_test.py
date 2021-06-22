@@ -1,10 +1,12 @@
-from typing import Generator
+from typing import List
 
 import pytest
 
 from eggular.qualifier import Eggular
 from eggular.qualifier import make_table
-from eggular.qualifier import SAMPLE01
+from eggular.qualifier import SAMPLE01_ROWS
+from eggular.qualifier import SAMPLE02_LABELS
+from eggular.qualifier import SAMPLE02_ROWS
 
 
 EXAMPLE01_RESULT = "\n".join(
@@ -19,27 +21,45 @@ EXAMPLE01_RESULT = "\n".join(
     ]
 )
 
-
-@pytest.fixture(scope="function", name="sample01")
-def fixture_sample01() -> Generator[Eggular, None, None]:
-    """Example 01 test fixture"""
-    eggtable = Eggular(SAMPLE01, None, False)
-
-    eggtable.render_table()
-
-    yield eggtable
+EXAMPLE02_RESULT = "\n".join(
+    [
+        "┌────────────┬───────────┬─────────┐",
+        "│ User       │ Messages  │ Role    │",
+        "├────────────┼───────────┼─────────┤",
+        "│ Lemon      │ 183285    │ Owner   │",
+        "│ Sebastiaan │ 183285.1  │ Owner   │",
+        "│ KutieKatj  │ 15000     │ Admin   │",
+        "│ Jake       │ MoreThanU │ Helper  │",
+        "│ Joe        │ -12       │ Idk Tbh │",
+        "└────────────┴───────────┴─────────┘",
+    ]
+)
 
 
 def test_sample_01() -> None:
     """Result match against example 01"""
 
-    result = make_table(SAMPLE01)
+    result = make_table(SAMPLE01_ROWS)
 
     assert result == EXAMPLE01_RESULT
 
 
-def test_find_column_sizes(sample01: Eggular) -> None:
-    """Find the correct max column size"""
-    expected = [10]
+def test_sample_02() -> None:
+    """Result match against example 01"""
 
-    assert sample01.col_sizes == expected
+    result = make_table(SAMPLE02_ROWS, SAMPLE02_LABELS)
+
+    assert result == EXAMPLE02_RESULT
+
+
+@pytest.mark.parametrize(
+    ("eggtable", "expected"),
+    (
+        (Eggular(SAMPLE01_ROWS, None, False), [10]),
+        (Eggular(SAMPLE02_ROWS, SAMPLE02_LABELS, False), [10, 9, 7]),
+    ),
+)
+def test_find_column_sizes(eggtable: Eggular, expected: List[int]) -> None:
+    """Find the correct max column size"""
+    eggtable.render_table()
+    assert eggtable.col_sizes == expected
