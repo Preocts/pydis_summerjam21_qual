@@ -3,33 +3,14 @@ from typing import Any
 from typing import List
 from typing import Optional
 
-SAMPLE01_ROWS: List[List[Any]] = [
-    ["Lemon"],
-    ["Sebastiaan"],
-    ["KutieKatj9"],
-    ["Jake"],
-    ["Not Joe"],
-]
-SAMPLE02_ROWS: List[List[Any]] = [
-    ["Lemon", 18_3285, "Owner"],
-    ["Sebastiaan", 18_3285.1, "Owner"],
-    ["KutieKatj", 15_000, "Admin"],
-    ["Jake", "MoreThanU", "Helper"],
-    ["Joe", -12, "Idk Tbh"],
-]
-
-SAMPLE02_LABELS = ["User", "Messages", "Role"]
-
 
 class Eggular:
     """Tabular Eggs"""
 
-    TOP_LEFT = "┌"
-    TOP_RIGHT = "┐"
-    BOT_LEFT = "└"
-    BOT_RIGHT = "┘"
-    HORZ = "─"
     VERT = "│"
+    TOP_BORDER = ("┌", "─", "┬", "┐")
+    MID_BORDER = ("├", "─", "┼", "┤")
+    BOT_BORDER = ("└", "─", "┴", "┘")
 
     def __init__(
         self, rows: List[List[Any]], labels: Optional[List[Any]], centered: bool
@@ -48,15 +29,16 @@ class Eggular:
         """Runs all steps to make a table"""
         self._find_column_sizes()
 
-        table_values = "\n".join(self._table_values())
+        table_rows = self._table_border(*self.TOP_BORDER) + "\n"
 
-        table_rows = [
-            self._table_top(),
-            table_values,
-            self._table_bottom(),
-        ]
+        if self.labels:
+            table_rows = "\n".join(self._table_rows([self.labels]))
 
-        return "\n".join(table_rows)
+        table_rows += "\n".join(self._table_rows(self.rows))
+
+        table_rows += "\n" + self._table_border(*self.BOT_BORDER)
+
+        return table_rows
 
     @staticmethod
     def _stringify(list_data: List[Any]) -> List[str]:
@@ -70,24 +52,17 @@ class Eggular:
                 if len(column_value) > self.col_sizes[idx]:
                     self.col_sizes[idx] = len(column_value)
 
-    def _table_top(self) -> str:
-        """Generates top of table"""
-        table_top = f"{self.TOP_LEFT}{self.HORZ}"
+    def _table_border(self, left: str, mid: str, seg: str, right: str) -> str:
+        """Generates border row of table"""
+        table_top = f"{left}{mid}"
         for size in self.col_sizes:
-            table_top += self.HORZ * size
-        return f"{table_top}{self.HORZ}{self.TOP_RIGHT}"
+            table_top += mid * size
+        return f"{table_top}{mid}{right}"
 
-    def _table_bottom(self) -> str:
-        """Generates bottom of table"""
-        table_top = f"{self.BOT_LEFT}{self.HORZ}"
-        for size in self.col_sizes:
-            table_top += self.HORZ * size
-        return f"{table_top}{self.HORZ}{self.BOT_RIGHT}"
-
-    def _table_values(self) -> List[str]:
+    def _table_rows(self, rows: List[List[str]]) -> List[str]:
         """Generates rows of table values"""
         table_values: List[str] = []
-        for row in self.rows:
+        for row in rows:
             table_row = ""
             for idx, column_value in enumerate(row):
                 padded_value = self._pad_value(column_value, idx)
@@ -120,5 +95,7 @@ def make_table(
 
 
 if __name__ == "__main__":
+    from tests.qualifier_test import SAMPLE01_ROWS
+
     print(make_table(SAMPLE01_ROWS))
     sys.exit(0)

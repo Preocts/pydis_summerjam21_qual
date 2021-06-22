@@ -1,13 +1,28 @@
+from typing import Any
 from typing import List
 
 import pytest
 
 from eggular.qualifier import Eggular
 from eggular.qualifier import make_table
-from eggular.qualifier import SAMPLE01_ROWS
-from eggular.qualifier import SAMPLE02_LABELS
-from eggular.qualifier import SAMPLE02_ROWS
 
+
+SAMPLE01_ROWS: List[List[Any]] = [
+    ["Lemon"],
+    ["Sebastiaan"],
+    ["KutieKatj9"],
+    ["Jake"],
+    ["Not Joe"],
+]
+SAMPLE02_ROWS: List[List[Any]] = [
+    ["Lemon", 18_3285, "Owner"],
+    ["Sebastiaan", 18_3285.1, "Owner"],
+    ["KutieKatj", 15_000, "Admin"],
+    ["Jake", "MoreThanU", "Helper"],
+    ["Joe", -12, "Idk Tbh"],
+]
+
+SAMPLE02_LABELS = ["User", "Messages", "Role"]
 
 EXAMPLE01_RESULT = "\n".join(
     [
