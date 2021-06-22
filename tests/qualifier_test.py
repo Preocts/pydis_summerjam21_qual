@@ -104,6 +104,7 @@ def test_sample_02() -> None:
     (
         (Eggular(SAMPLE01_ROWS, None, False), [10]),
         (Eggular(SAMPLE02_ROWS, SAMPLE02_LABELS, False), [10, 9, 7]),
+        (Eggular(SAMPLE03_ROWS, SAMPLE03_LABELS, True), [12, 9]),
     ),
 )
 def test_find_column_sizes(eggtable: Eggular, expected: List[int]) -> None:

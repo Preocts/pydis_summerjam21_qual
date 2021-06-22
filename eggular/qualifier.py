@@ -48,7 +48,11 @@ class Eggular:
 
     def _find_column_sizes(self) -> None:
         """Finds the max column width"""
-        for row in self.rows:
+        check_rows = self.rows.copy()
+        if self.labels is not None:
+            check_rows.append(self.labels.copy())
+
+        for row in check_rows:
             for idx, column_value in enumerate(row):
                 if len(column_value) > self.col_sizes[idx]:
                     self.col_sizes[idx] = len(column_value)
