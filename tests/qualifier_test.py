@@ -1,9 +1,13 @@
+from typing import Generator
+
+import pytest
+
 from eggular.qualifier import Eggular
 from eggular.qualifier import make_table
 from eggular.qualifier import SAMPLE01
 
 
-EXAMPLE01_RESULT = "".join(
+EXAMPLE01_RESULT = "\n".join(
     [
         "┌────────────┐",
         "│ Lemon      │",
@@ -16,6 +20,16 @@ EXAMPLE01_RESULT = "".join(
 )
 
 
+@pytest.fixture(scope="function", name="sample01")
+def fixture_sample01() -> Generator[Eggular, None, None]:
+    """Example 01 test fixture"""
+    eggtable = Eggular(SAMPLE01, None, False)
+
+    eggtable.render_table()
+
+    yield eggtable
+
+
 def test_sample_01() -> None:
     """Result match against example 01"""
 
@@ -24,11 +38,8 @@ def test_sample_01() -> None:
     assert result == EXAMPLE01_RESULT
 
 
-def test_find_column_sizes() -> None:
+def test_find_column_sizes(sample01: Eggular) -> None:
     """Find the correct max column size"""
     expected = [10]
-    eggtable = Eggular(SAMPLE01, None, False)
 
-    eggtable.find_column_sizes()
-
-    assert eggtable.col_sizes == expected
+    assert sample01.col_sizes == expected

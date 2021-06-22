@@ -15,6 +15,13 @@ SAMPLE01 = rows = [
 class Eggular:
     """Tabular Eggs"""
 
+    TOP_LEFT = "┌"
+    TOP_RIGHT = "┐"
+    BOT_LEFT = "└"
+    BOT_RIGHT = "┘"
+    HORZ = "─"
+    VERT = "│"
+
     def __init__(
         self, rows: List[List[Any]], labels: Optional[List[Any]], centered: bool
     ) -> None:
@@ -28,16 +35,57 @@ class Eggular:
 
         self.table_string = ""
 
-    def __str__(self) -> str:
-        """Print the rendered table"""
-        return self.table_string
+    def render_table(self) -> str:
+        """Runs all steps to make a table"""
+        self._find_column_sizes()
 
-    def find_column_sizes(self) -> None:
+        table_values = "\n".join(self._table_values())
+
+        table_rows = [
+            self._table_top(),
+            table_values,
+            self._table_bottom(),
+        ]
+
+        return "\n".join(table_rows)
+
+    def _find_column_sizes(self) -> None:
         """Finds the max column width"""
         for row in self.rows:
             for idx, column_value in enumerate(row):
                 if len(column_value) > self.col_sizes[idx]:
                     self.col_sizes[idx] = len(column_value)
+
+    def _table_top(self) -> str:
+        """Generates top of table"""
+        table_top = f"{self.TOP_LEFT}{self.HORZ}"
+        for size in self.col_sizes:
+            table_top += self.HORZ * size
+        return f"{table_top}{self.HORZ}{self.TOP_RIGHT}"
+
+    def _table_bottom(self) -> str:
+        """Generates bottom of table"""
+        table_top = f"{self.BOT_LEFT}{self.HORZ}"
+        for size in self.col_sizes:
+            table_top += self.HORZ * size
+        return f"{table_top}{self.HORZ}{self.BOT_RIGHT}"
+
+    def _table_values(self) -> List[str]:
+        """Generates rows of table values"""
+        table_values: List[str] = []
+        for row in self.rows:
+            table_row = ""
+            for idx, column_value in enumerate(row):
+                padded_value = self._pad_value(column_value, idx)
+                table_row += f"{self.VERT} {padded_value}"
+            table_row += f" {self.VERT}"
+            table_values.append(table_row)
+        return table_values
+
+    def _pad_value(self, value: str, col: int) -> str:
+        """Pads the value with spaces"""
+        pad_size = self.col_sizes[col] - len(value)
+        return value + " " * pad_size
 
 
 def make_table(
@@ -54,10 +102,7 @@ def make_table(
     """
     egg_table = Eggular(rows, labels, centered)
 
-    egg_table.find_column_sizes()
-    print(egg_table.col_sizes)
-
-    return egg_table.table_string
+    return egg_table.render_table()
 
 
 if __name__ == "__main__":
