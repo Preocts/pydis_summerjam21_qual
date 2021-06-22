@@ -9,7 +9,7 @@ Summer Jam '21 qualifier for Python Discord
 [https://github.com/python-discord/cj8-qualifier](https://github.com/python-discord/cj8-qualifier)
 
 ### Requirements
-- Python == 3.9
+- Python == 3.9.5
 
 ## Local developer installation
 
