@@ -1,3 +1,4 @@
+import datetime
 from typing import Any
 from typing import List
 
@@ -32,6 +33,12 @@ SAMPLE03_ROWS = [
 ]
 SAMPLE03_LABELS = ["Name", "Duckiness"]
 
+SAMPLE04_ROWS = [
+    [None, None, None],
+    [[1, 2, 3], [1, 2, 3], [1, 2, 3]],
+]
+NOW = datetime.datetime.now()
+SAMPLE04_LABELS = [NOW, 0, "zero"]
 
 EXAMPLE01_RESULT = "\n".join(
     [
@@ -72,6 +79,17 @@ EXAMPLE03_RESULT = "\n".join(
     ]
 )
 
+EXAMPLE04_RESULT = "\n".join(
+    [
+        "┌────────────────────────────┬───────────┬───────────┐",
+        f"│ {NOW} │     0     │   zero    │",
+        "├────────────────────────────┼───────────┼───────────┤",
+        "│            None            │   None    │   None    │",
+        "│         [1, 2, 3]          │ [1, 2, 3] │ [1, 2, 3] │",
+        "└────────────────────────────┴───────────┴───────────┘",
+    ]
+)
+
 
 @pytest.mark.parametrize(
     ("row", "label", "centered", "expected"),
@@ -79,6 +97,7 @@ EXAMPLE03_RESULT = "\n".join(
         (SAMPLE01_ROWS, None, False, EXAMPLE01_RESULT),
         (SAMPLE02_ROWS, SAMPLE02_LABELS, False, EXAMPLE02_RESULT),
         (SAMPLE03_ROWS, SAMPLE03_LABELS, True, EXAMPLE03_RESULT),
+        (SAMPLE04_ROWS, SAMPLE04_LABELS, True, EXAMPLE04_RESULT),
     ),
 )
 def test_sample_01(
