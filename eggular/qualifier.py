@@ -87,7 +87,13 @@ class Eggular:
     def _pad_value(self, value: str, col: int) -> str:
         """Pads the value with spaces"""
         pad_size = self.col_sizes[col] - len(value)
-        return value + " " * pad_size
+        left = pad_size // 2
+        right = pad_size // 2 + pad_size % 2
+        if self.centered:
+            padded_value = " " * left + value + " " * right
+        else:
+            padded_value = value + " " * pad_size
+        return padded_value
 
 
 def make_table(
