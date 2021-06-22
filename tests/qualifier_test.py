@@ -24,6 +24,15 @@ SAMPLE02_ROWS: List[List[Any]] = [
 
 SAMPLE02_LABELS = ["User", "Messages", "Role"]
 
+SAMPLE03_ROWS = [
+    ["Ducky Yellow", 3],
+    ["Ducky Dave", 12],
+    ["Ducky Tube", 7],
+    ["Ducky Lemon", 1],
+]
+SAMPLE03_LABELS = ["Name", "Duckiness"]
+
+
 EXAMPLE01_RESULT = "\n".join(
     [
         "┌────────────┐",
@@ -50,13 +59,36 @@ EXAMPLE02_RESULT = "\n".join(
     ]
 )
 
+EXAMPLE03_RESULT = "\n".join(
+    [
+        "┌──────────────┬───────────┐",
+        "│     Name     │ Duckiness │",
+        "├──────────────┼───────────┤",
+        "│ Ducky Yellow │     3     │",
+        "│  Ducky Dave  │    12     │",
+        "│  Ducky Tube  │     7     │",
+        "│ Ducky Lemon  │     1     │",
+        "└──────────────┴───────────┘",
+    ]
+)
 
-def test_sample_01() -> None:
+
+@pytest.mark.parametrize(
+    ("row", "label", "centered", "expected"),
+    (
+        (SAMPLE01_ROWS, None, False, EXAMPLE01_RESULT),
+        (SAMPLE02_ROWS, SAMPLE02_LABELS, False, EXAMPLE02_RESULT),
+        (SAMPLE03_ROWS, SAMPLE03_LABELS, True, EXAMPLE03_RESULT),
+    ),
+)
+def test_sample_01(
+    row: List[List[Any]], label: List[Any], centered: bool, expected: Any
+) -> None:
     """Result match against example 01"""
 
-    result = make_table(SAMPLE01_ROWS)
+    result = make_table(row, label, centered)
 
-    assert result == EXAMPLE01_RESULT
+    assert result == expected
 
 
 def test_sample_02() -> None:

@@ -107,8 +107,12 @@ if __name__ == "__main__":
     from tests.qualifier_test import SAMPLE01_ROWS
     from tests.qualifier_test import SAMPLE02_ROWS
     from tests.qualifier_test import SAMPLE02_LABELS
+    from tests.qualifier_test import SAMPLE03_ROWS
+    from tests.qualifier_test import SAMPLE03_LABELS
 
     print(make_table(SAMPLE01_ROWS))
     print("\n\n")
     print(make_table(SAMPLE02_ROWS, SAMPLE02_LABELS))
+    print("\n\n")
+    print(make_table(SAMPLE03_ROWS, SAMPLE03_LABELS, True))
     sys.exit(0)
