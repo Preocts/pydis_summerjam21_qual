@@ -5,7 +5,6 @@ init:
 
 dev-install:  # install development requirements
 	pip install -r requirements-dev.txt
-	pip install --editable .
 	pre-commit install
 
 update: clean-pyc clean-tests init update-deps dev-install
@@ -27,7 +26,3 @@ clean-tests: ## Removes tox, coverage, and pytest artifacts
 	rm -rf coverage_html_report
 	rm -rf .coverage
 	find . -name '.pytest_cache' -exec rm -rf {} +
-
-build-dist: ## Builds source distribution and wheel distribution files
-	rm -rf ./dist
-	python setup.py sdist bdist_wheel
