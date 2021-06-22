@@ -36,10 +36,10 @@ class Eggular:
         self.table_string = self._table_border(*self.TOP_BORDER)
 
         if self.labels is not None:
-            self.table_string += "\n" + self._table_rows([self.labels])[0]
+            self.table_string += "\n" + self._table_rows([self.labels])
             self.table_string += "\n" + self._table_border(*self.MID_BORDER)
 
-        self.table_string += "\n" + "\n".join(self._table_rows(self.rows))
+        self.table_string += "\n" + self._table_rows(self.rows)
 
         self.table_string += "\n" + self._table_border(*self.BOT_BORDER)
 
@@ -71,7 +71,7 @@ class Eggular:
 
         return f"{table_top}{right}"
 
-    def _table_rows(self, rows: List[List[str]]) -> List[str]:
+    def _table_rows(self, rows: List[List[str]]) -> str:
         """Generates rows of table values"""
         table_values: List[str] = []
         for row in rows:
@@ -81,7 +81,7 @@ class Eggular:
                 table_row += f"{self.VERT} {padded_value} "
 
             table_values.append(table_row + self.VERT)
-        return table_values
+        return "\n".join(table_values)
 
     def _pad_value(self, value: str, col: int) -> str:
         """Pads the value with spaces, accounts for centered flag"""
