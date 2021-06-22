@@ -1,3 +1,8 @@
+"""
+Qualifier round for PyDiscord Summer Code Jam '21
+
+Author: Preocts (Discord: Preocts#8196)
+"""
 from typing import Any
 from typing import List
 from typing import Optional
@@ -15,30 +20,30 @@ class Eggular:
         self, rows: List[List[Any]], labels: Optional[List[Any]], centered: bool
     ) -> None:
         self.rows = [self._stringify(row) for row in rows]
-        self.labels = [str(label) for label in labels] if labels is not None else []
+        self.labels = self._stringify(labels) if labels is not None else None
         self.centered = centered
 
-        # We can always assume all rows will have the same # of entries
+        # Qualifier: can assume all rows will have the same # of entries
         self.total_columns = len(rows[0])
         self.col_sizes: List[int] = [0 for _ in range(self.total_columns)]
 
         self.table_string = ""
 
     def render_table(self) -> str:
-        """Runs all steps to make a table"""
+        """Creates a printing string of the table"""
         self._find_column_sizes()
 
-        table_rows = self._table_border(*self.TOP_BORDER)
+        self.table_string = self._table_border(*self.TOP_BORDER)
 
-        if self.labels:
-            table_rows += "\n" + "\n".join(self._table_rows([self.labels]))
-            table_rows += "\n" + self._table_border(*self.MID_BORDER)
+        if self.labels is not None:
+            self.table_string += "\n" + self._table_rows([self.labels])[0]
+            self.table_string += "\n" + self._table_border(*self.MID_BORDER)
 
-        table_rows += "\n" + "\n".join(self._table_rows(self.rows))
+        self.table_string += "\n" + "\n".join(self._table_rows(self.rows))
 
-        table_rows += "\n" + self._table_border(*self.BOT_BORDER)
+        self.table_string += "\n" + self._table_border(*self.BOT_BORDER)
 
-        return table_rows
+        return self.table_string
 
     @staticmethod
     def _stringify(list_data: List[Any]) -> List[str]:
@@ -58,13 +63,12 @@ class Eggular:
 
     def _table_border(self, left: str, mid: str, seg: str, right: str) -> str:
         """Generates border row of table"""
-        table_top = f"{left}{mid}"
+        table_top = ""
 
         for idx, size in enumerate(self.col_sizes):
-            if idx == 0:
-                table_top = f"{left}{mid * (size + 2)}"
-            else:
-                table_top += f"{seg}{mid * (size + 2)}"
+            leading = left if idx == 0 else seg
+            table_top += f"{leading}{mid * (size + 2)}"
+
         return f"{table_top}{right}"
 
     def _table_rows(self, rows: List[List[str]]) -> List[str]:
@@ -74,25 +78,18 @@ class Eggular:
             table_row = ""
             for idx, column_value in enumerate(row):
                 padded_value = self._pad_value(column_value, idx)
-                if idx == 0:
-                    table_row += f"{self.VERT} {padded_value}"
-                else:
-                    table_row += f" {self.VERT} {padded_value}"
+                table_row += f"{self.VERT} {padded_value} "
 
-            table_row += f" {self.VERT}"
-            table_values.append(table_row)
+            table_values.append(table_row + self.VERT)
         return table_values
 
     def _pad_value(self, value: str, col: int) -> str:
-        """Pads the value with spaces"""
+        """Pads the value with spaces, accounts for centered flag"""
         pad_size = self.col_sizes[col] - len(value)
-        left = pad_size // 2
-        right = pad_size // 2 + pad_size % 2
-        if self.centered:
-            padded_value = " " * left + value + " " * right
-        else:
-            padded_value = value + " " * pad_size
-        return padded_value
+        left = pad_size // 2 if self.centered else 0
+        right = pad_size // 2 + pad_size % 2 if self.centered else pad_size
+
+        return " " * left + value + " " * right
 
 
 def make_table(
