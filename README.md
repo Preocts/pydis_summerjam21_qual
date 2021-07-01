@@ -6,6 +6,8 @@
 
 Summer Jam '21 qualifier for Python Discord
 
+Qualified
+
 [https://github.com/python-discord/cj8-qualifier](https://github.com/python-discord/cj8-qualifier)
 
 ### Requirements
